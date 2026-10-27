@@ -1,0 +1,37 @@
+{
+  "repository": "https://github.com/agilexrobotics/tracer_ros2",
+  "commit": "832ea9a48fe725d47d766a099d358062ea2f0f31",
+  "files": [
+    {
+      "path": "tracer_msgs/CMakeLists.txt",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/msg/TracerActuatorState.msg",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/msg/TracerLightCmd.msg",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/msg/TracerLightState.msg",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/msg/TracerRCState.msg",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/msg/TracerStatus.msg",
+      "equal_ignoring_line_endings": true
+    },
+    {
+      "path": "tracer_msgs/package.xml",
+      "equal_ignoring_line_endings": true
+    }
+  ],
+  "license": "Apache-2.0 at upstream root; tracer_msgs/package.xml retains original BSD declaration",
+  "license_file": "third_party/TRACER_ROS2_UPSTREAM_LICENSE",
+  "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+}

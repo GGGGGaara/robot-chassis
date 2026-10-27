@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>固定地图 · A → B 路径预览</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111923;color:#e8eff4;font:15px/1.6 system-ui,"Microsoft YaHei",sans-serif}main{max-width:1300px;margin:auto;padding:28px}h1{font-size:25px;margin:0 0 7px}p{margin:6px 0;color:#a9bac8}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}button{border:1px solid #496172;border-radius:7px;padding:10px 17px;background:#243443;color:white;cursor:pointer}button.active{background:#246d69;border-color:#72d5b4}.status{padding:12px 16px;background:#1d2b3b;border-left:4px solid #f1c66b;border-radius:4px;margin:12px 0;min-height:50px}.good{border-color:#57ce9a}.bad{border-color:#ef7b72}.mapbox{background:#293241;border:1px solid #3c4c60;border-radius:8px;padding:8px}canvas{width:100%;display:block;cursor:crosshair;touch-action:none}.legend{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:#b9c8d4;margin:12px 0}.dot{display:inline-block;width:11px;height:11px;margin-right:6px;border-radius:2px}.small{font-size:13px}#metrics{font-variant-numeric:tabular-nums}strong{color:#fff}
+</style><main><h1>固定地图 · A → B 路径预览</h1>
+<p>实时 A 为底盘中心。先确认三维点云对齐，再点击 B，或输入相对当前位置的前进／左移距离（单位米）。</p>
+<form id="coordinates" class="toolbar"><label>前进 <input id="forward" type="number" value="1" step="0.1" min="-15" max="15" required> 米</label><label>左移 <input id="leftward" type="number" value="0" step="0.1" min="-15" max="15" required> 米</label><button type="submit">预览坐标目标</button></form>
+<div class="toolbar"><button id="live" class="active">使用实时 A</button><button id="manual">手选 A（离线演示）</button><button id="goal">点击选择 B</button><button id="clear">清除路线</button></div>
+<div id="status" class="status">正在连接本机定位数据…</div>
+<div class="mapbox"><canvas id="map"></canvas></div>
+<div class="legend"><span><i class="dot" style="background:#cfe1da"></i>留足车身空间的区域</span><span><i class="dot" style="background:#626d79"></i>车身余量范围</span><span><i class="dot" style="background:#b36b58"></i>障碍或非零代价</span><span><i class="dot" style="background:#293241"></i>未知区域</span><span><i class="dot" style="background:#f3c968"></i>规划路线</span></div>
+<p id="metrics"></p><p class="small">尺寸依据 TRACER 2.0 手册：长 0.702 m、宽 0.610 m。采用底盘外接圆＋0.10 m 余量；外露支架超出底盘时还需增大尺寸。</p>
+<p class="small">页面只预览并保存目标，不驱动车辆。左移表示目标位置，不是横向平移命令；差速底盘会转弯绕障。终端导航会重新检查实时障碍。三维建模结果由建模会话单独保存。</p></main>
+<script>
+const canvas=document.querySelector('#map'),ctx=canvas.getContext('2d'),status=document.querySelector('#status');
+let meta,state={},image=new Image(),mode='live',select='goal',start=null,goal=null,route=null,busy=false;
+function say(text,kind=''){status.textContent=text;status.className='status '+kind}
+function pixel(p){return [(p[0]-meta.origin[0])/meta.resolution,meta.height-(p[1]-meta.origin[1])/meta.resolution]}
+function mark(p,text,color){if(!p)return;const [x,y]=pixel(p);ctx.fillStyle=color;ctx.strokeStyle='#111923';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='bold 13px sans-serif';ctx.fillText(text,x+8,y-7)}
+function draw(){if(!meta||!image.complete)return;ctx.drawImage(image,0,0);if(route){ctx.beginPath();route.points.forEach((p,i)=>{let[x,y]=pixel(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle='#f3c968';ctx.lineWidth=2.3;ctx.stroke();mark(route.start,'A（规划时）','#83b4ff')}
+let a=mode==='live'&&state.pose?[state.pose.x,state.pose.y]:start;if(a){let[x,y]=pixel(a);ctx.strokeStyle=state.fresh||mode==='manual'?'#68e5bd':'#e8a674';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,meta.radius_m/meta.resolution,0,Math.PI*2);ctx.stroke();mark(a,'A',state.fresh||mode==='manual'?'#68e5bd':'#e8a674')}mark(goal,'B','#f59880');ctx.strokeStyle='#fff';ctx.fillStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(12,meta.height-18);ctx.lineTo(12+1/meta.resolution,meta.height-18);ctx.stroke();ctx.font='12px sans-serif';ctx.fillText('1 m',12,meta.height-27)}
+function modes(){document.querySelector('#live').className=mode==='live'?'active':'';document.querySelector('#manual').className=mode==='manual'?'active':'';document.querySelector('#goal').className=select==='goal'?'active':''}
+document.querySelector('#live').onclick=()=>{mode='live';select='goal';route=null;modes();say('实时 A 模式：在浅色可通行区域点击 B。');draw()};
+document.querySelector('#manual').onclick=()=>{mode='manual';select='start';route=null;modes();say('离线演示：请点击浅色区域设置 A。此时不使用真实车辆位置。');draw()};
+document.querySelector('#goal').onclick=()=>{select='goal';modes();say('请在浅色可通行区域点击 B。')};
+document.querySelector('#clear').onclick=()=>{route=null;goal=null;select='goal';modes();say('已清除路线。在浅色可通行区域重新选择 B。');draw()};
+async function plan(request){busy=true;route=null;say('正在计算路线…');try{const response=await fetch('/plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)}),result=await response.json();if(!response.ok)throw Error(result.error);route=result;goal=result.goal;say(`A→B 直线 ${result.straight_distance_m.toFixed(2)} m；绕障路线 ${result.length_m.toFixed(2)} m。仅预览，车辆不会行驶。`,'good')}catch(e){say(e.message,'bad')}finally{busy=false;draw()}}
+canvas.onclick=async event=>{if(!meta||busy)return;let r=canvas.getBoundingClientRect(),gx=(event.clientX-r.left)/r.width*meta.width,gy=meta.height-(event.clientY-r.top)/r.height*meta.height;let p=[meta.origin[0]+gx*meta.resolution,meta.origin[1]+gy*meta.resolution];if(select==='start'){start=p;select='goal';modes();say('A 已设置，请点击 B。');draw();return}goal=p;await plan({live:mode==='live',start,goal})};
+document.querySelector('#coordinates').onsubmit=async event=>{event.preventDefault();if(busy)return;mode='live';select='goal';modes();await plan({live:true,offset:[Number(document.querySelector('#forward').value),Number(document.querySelector('#leftward').value)]})};
+async function poll(){try{let r=await fetch('/state');state=await r.json();document.querySelector('#metrics').textContent=state.pose?`实时底盘中心：X ${state.pose.x.toFixed(2)} m，Y ${state.pose.y.toFixed(2)} m · 定位接收 ${state.age_s.toFixed(1)} 秒前`:'等待实时定位：请保持建模／重定位终端运行。';if(mode==='live'&&!state.fresh&&!busy)say('定位缺失或超过 0.5 秒未更新，实时起点规划已暂停。','bad');draw()}catch(e){say('页面服务连接中断，请检查路径预览终端。','bad')}}
+(async()=>{meta=await(await fetch('/meta')).json();canvas.width=meta.width;canvas.height=meta.height;image.onload=()=>{draw();say('浅色为留足底盘空间的区域。点击选择 B，生成路线。')};image.src='/map.png';await poll();setInterval(poll,500)})();
+</script></html>

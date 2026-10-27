@@ -1,0 +1,2 @@
+# ROS rclpy comes from Ubuntu /opt/ros/humble, never from pip.
+lcm==1.5.3

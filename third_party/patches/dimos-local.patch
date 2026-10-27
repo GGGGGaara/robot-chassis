@@ -1,0 +1,22 @@
+diff --git a/dimos/mapping/cli/map.py b/dimos/mapping/cli/map.py
+index 6fca8a6a2..4a1637cda 100644
+--- a/dimos/mapping/cli/map.py
++++ b/dimos/mapping/cli/map.py
+@@ -428,7 +428,6 @@ def main(
+     from dimos.msgs.sensor_msgs.Image import Image
+     from dimos.msgs.sensor_msgs.PointCloud2 import PointCloud2
+     from dimos.perception.fiducial.marker_transformer import DetectMarkers
+-    from dimos.robot.unitree.go2.connection import BASE_TO_OPTICAL, _camera_info_static
+     from dimos.visualization.rerun.init import rerun_init
+ 
+     db_path = resolve_dataset(dataset)
+@@ -604,6 +603,9 @@ def main(
+ 
+     marker_dets: list[Observation[Any]] = []
+     if markers:
++        # Only the optional camera-marker path needs Go2's camera defaults.
++        from dimos.robot.unitree.go2.connection import BASE_TO_OPTICAL, _camera_info_static
++
+         # Image observations in dimos recordings are stamped with
+         # frame_id="camera_optical", so obs.pose is already optical-in-world
+         # (verified: matches lidar_base_pose + BASE_TO_OPTICAL to ~1mm). With

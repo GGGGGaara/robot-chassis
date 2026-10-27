@@ -1,0 +1,24 @@
+name: Offline ROS checks
+on: [push, pull_request]
+jobs:
+  offline:
+    runs-on: ubuntu-22.04
+    container: ros:humble-ros-base
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: |
+          apt-get update
+          apt-get install -y python3-colcon-common-extensions python3-venv python3-numpy python3-scipy python3-yaml python3-pil ros-humble-tf2-ros
+          /usr/bin/python3 -m venv --system-site-packages tracer_navigation/.ros_venv
+      - name: Compile bringup and run isolated demo
+        shell: bash
+        run: |
+          set -eo pipefail
+          export TRACER_RUNTIME_ROOT=/tmp/tracer_team_runtime
+          export ROS_DOMAIN_ID=74 ROS_LOCALHOST_ONLY=1
+          bash tracer_navigation/build_ros2.sh
+          source tracer_navigation/ros_env.sh
+          python tools/team/test_portability.py
+          python tools/team/smoke_demo.py
+          python tools/repo_audit.py

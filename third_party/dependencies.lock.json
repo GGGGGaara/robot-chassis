@@ -1,0 +1,473 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-10-27",
+  "dimos": {
+    "url": "https://github.com/dimensionalOS/dimos.git",
+    "commit": "2a6e7465b768e29a0dc4d0722ec096e50e1b168c",
+    "local_patch": "third_party/patches/dimos-local.patch",
+    "patch_sha256": "2eb4e4496f3dde23af3c0862cd4b00aef0df7b2adee541ffcd49ddc9e381aa8a",
+    "python": "3.12 (current validated mapping environment; separate from ROS Python 3.10)"
+  },
+  "ugv_sdk": {
+    "url": "https://github.com/agilexrobotics/ugv_sdk.git",
+    "commit": "f2704eacdc90357078cd93ec60aae08bb4baab35",
+    "source": "build-required local snapshot, including existing local changes; not a pristine upstream checkout",
+    "license": "Apache-2.0; original LICENSE retained"
+  },
+  "ros_python_packages": {
+    "lcm": "1.5.3",
+    "dimos_lcm": "0.1.4 (schema only; install with --no-deps)"
+  },
+  "mapping_python_packages_observed": {
+    "dimos": "0.0.14",
+    "dimos_lcm": "0.1.4",
+    "lcm-dimos-fork": "1.5.2.post1",
+    "rerun-sdk": "0.32.0"
+  },
+  "vendor_files": [
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/async_port/async_can.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/async_port/async_can.hpp",
+      "bytes": 1697,
+      "sha256": "bf95662a8c413de3fd14d2056d5c8a8d131a2f92ae261291d2d1a8006698cb4c"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/async_port/async_serial.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/async_port/async_serial.hpp",
+      "bytes": 1896,
+      "sha256": "3757edd3012fb5bc71cd4a2df67305fda4e110550e8aa4b3b4fa9a63e2c53ea6"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/async_port/ring_buffer.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/async_port/ring_buffer.hpp",
+      "bytes": 3740,
+      "sha256": "797612c80f0660a3b730800ba1def5119c224f3d3d6a53ad00f718e2a05bc0cb"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/agilex_message.h",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/agilex_message.h",
+      "bytes": 9399,
+      "sha256": "fdf4f535e99077b36b14c4165a6845843d99d165e37df9dba81da044170626bf"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/agilex_types.h",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/agilex_types.h",
+      "bytes": 963,
+      "sha256": "31c667e25aea9f0f58067385efd6613869f022dfd2cbdbd7218f31e4df7ff907"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/bunker_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/bunker_interface.hpp",
+      "bytes": 1282,
+      "sha256": "c7518a9abe85b493289b3387b9c792b94b3deb04a602873568c7f37f5523f366"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/hunter_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/hunter_interface.hpp",
+      "bytes": 1355,
+      "sha256": "d4ad9b1c2d9a47d423f0efa5a26d1a1d84f85c1b5b0eff86ebd1f3fa7b4ff02b"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/ranger_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/ranger_interface.hpp",
+      "bytes": 1890,
+      "sha256": "86f5decfc6d6a3bf4bfbe6c0377639aed05b8aeedda52c0be9dcd943c0261edb"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/robot_common_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/robot_common_interface.hpp",
+      "bytes": 1007,
+      "sha256": "c2de70189a84f37e452b3f454300891c55c938607dc3ed98c0376f861e69aa9c"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/scout_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/scout_interface.hpp",
+      "bytes": 1753,
+      "sha256": "fcedca69122832fd2b079d02d4b03799e71e7183b1df19f65e51a63f1e78056e"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/titan_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/titan_interface.hpp",
+      "bytes": 1402,
+      "sha256": "ae86fc6bd4a1a8d8c90c98a4bba16d1fdb2c4fabbd9916f51e9fb428fd777eca"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/interface/tracer_interface.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/interface/tracer_interface.hpp",
+      "bytes": 1366,
+      "sha256": "1e57056bd058b7c7818234fb0270491e619f37fc81b2514a634e9bfd3a1cdf7f"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/parser_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/parser_base.hpp",
+      "bytes": 1434,
+      "sha256": "c06143016c6d6e9750ff0cd63c0def7c2fe3792338e9b6e4a0dacaa6ec8eefdf"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/protocol_v1/agilex_msg_parser_v1.h",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/protocol_v1/agilex_msg_parser_v1.h",
+      "bytes": 786,
+      "sha256": "ba0a932e2252e631b8ceca5936a9bfd29850fbbd52d8fa54f2b507acd92fcaf2"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/protocol_v1/protocol_v1_parser.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/protocol_v1/protocol_v1_parser.hpp",
+      "bytes": 2848,
+      "sha256": "6c59d1e9ffc8fd6339e32024e2e06b6ca5b8ea2b7fcca9f1fdda767201de5a81"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/protocol_v1/robot_limits.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/protocol_v1/robot_limits.hpp",
+      "bytes": 1606,
+      "sha256": "f7b596b38a66e5363ae1ddcc3d62db94e51b9eea98ee6be5a5f823e5f3b79aaf"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/protocol_v2/protocol_v2_parser.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/protocol_v2/protocol_v2_parser.hpp",
+      "bytes": 698,
+      "sha256": "3760e8bbf58709cb884e20d51396f676423ee2f8e18e86f500ae62d710918743"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/agilex_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/agilex_base.hpp",
+      "bytes": 13842,
+      "sha256": "5522b56487fdc02a466c12baf17bbff3d4c310a9289f476177d32a713843b4a0"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/bunker_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/bunker_base.hpp",
+      "bytes": 2524,
+      "sha256": "fde0f304f2a34eeb2832dd0daee99442fe7253cb270157a305fb087d826400a6"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/hunter_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/hunter_base.hpp",
+      "bytes": 3729,
+      "sha256": "4feefa59f1d3d7d830a323d9de3a504eeb2b9e6450a68f9d2eaf0d7f10374f56"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/ranger_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/ranger_base.hpp",
+      "bytes": 8868,
+      "sha256": "1d1090811d3f9af77d374c3f07d96a35cbb15755aa1094a5c22a72f3c97a1445"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/scout_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/scout_base.hpp",
+      "bytes": 3646,
+      "sha256": "ed8827af26c06bc73903599790fe3dd5f76ec78b1b1c2d101e1cc39b4680e594"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/titan_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/titan_base.hpp",
+      "bytes": 3147,
+      "sha256": "87ac03b21275c85781daa99fc91784a056999b5500e9c0954caaa420c014db94"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/details/robot_base/tracer_base.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/details/robot_base/tracer_base.hpp",
+      "bytes": 2952,
+      "sha256": "aca6a286d49d4404a7012c70478a6b227f25af01593aae90a5bfff0c9060d46b"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/bunker_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/bunker_robot.hpp",
+      "bytes": 1105,
+      "sha256": "0e058d341668f37fe83eff216f862617c47c4446759f8dafdd7b7abb4868cc4a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/hunter_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/hunter_robot.hpp",
+      "bytes": 1173,
+      "sha256": "376da97fff05a00303214dda9a3e25d3ba9330266bf5a6b132b803f2c70a1264"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/ranger_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/ranger_robot.hpp",
+      "bytes": 1467,
+      "sha256": "9a08cbb00a4dc28be1c692cf542cbc40f9efdcd891ed0b9e4703ca2bbba8906a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/scout_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/scout_robot.hpp",
+      "bytes": 1729,
+      "sha256": "2e5717b230d93675eaa4a51840bc56aa2f55088fd8cacaebe5550dc30c4b9081"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/titan_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/titan_robot.hpp",
+      "bytes": 1109,
+      "sha256": "ee89fcfe1bddc5b4ac5d244030fed8e91ec497b3d2bceecdb1724b0e03a951b4"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/mobile_robot/tracer_robot.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/mobile_robot/tracer_robot.hpp",
+      "bytes": 1218,
+      "sha256": "245af813dd2143fdefb2d32a60bb4f24d751d75e8d8a3fe4734ca102584f057f"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/include/ugv_sdk/utilities/protocol_detector.hpp",
+      "path": "third_party/tracer_vendor/sdk/include/ugv_sdk/utilities/protocol_detector.hpp",
+      "bytes": 702,
+      "sha256": "451bc0b674e733c1f1ecf5527025c5302fd63d4e52147e79cdf8ab5ae030f80c"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/async_port/async_can.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/async_port/async_can.cpp",
+      "bytes": 3679,
+      "sha256": "19108a3fe90f41a7cb49436755c2cb2c42e72eaae2cd6c6135aea81f9d72877a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/async_port/async_serial.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/async_port/async_serial.cpp",
+      "bytes": 4525,
+      "sha256": "825744128c5a9872a125977d06ff696e3437a53fb656d937faadcd9ae150ac8a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/bunker_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/bunker_robot.cpp",
+      "bytes": 1653,
+      "sha256": "25ef9f92985cfd0fda5a774d4a64a09e90716ea69bded9eff658806cdf5a5bc9"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/hunter_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/hunter_robot.cpp",
+      "bytes": 1893,
+      "sha256": "4559cbef2bac0db9d3c67fbb9740668d0bd79bef825d820623f50552c19b3669"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/ranger_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/ranger_robot.cpp",
+      "bytes": 2379,
+      "sha256": "94ab7dfa39be6b22ee5260de1c5e58b5d24ddd49aeb8ac2f181850bde6db9741"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/scout_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/scout_robot.cpp",
+      "bytes": 2917,
+      "sha256": "35411cdf84f4f0c37199a3a768a80d9dccb15f52968c84e7b68ee6dd695c2921"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/titan_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/titan_robot.cpp",
+      "bytes": 1793,
+      "sha256": "3ad9017731087edecac7da13e857ee6d7a2426195d5baf1cbf6d4de553208228"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/mobile_robot/tracer_robot.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/mobile_robot/tracer_robot.cpp",
+      "bytes": 1962,
+      "sha256": "88b207de61ed9a152f16a54b99f3d0c684927ad6eb915593fe3ee794051e1166"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v1/agilex_msg_parser_v1.c",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v1/agilex_msg_parser_v1.c",
+      "bytes": 6436,
+      "sha256": "327f4ac9ff0c3895702e7a7a643c7cd0dcbcc26e122380ecbd14133f5daca559"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v1/agilex_protocol_v1.h",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v1/agilex_protocol_v1.h",
+      "bytes": 5142,
+      "sha256": "72199e956aef27685340343d88706b59704039411acc9ed25b3c8c5d73b285b5"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v2/agilex_msg_parser_v2.c",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v2/agilex_msg_parser_v2.c",
+      "bytes": 26417,
+      "sha256": "8da1e060088f0dcb91593c5c47361660ae9560c6faa2ef63a008e8a2690d6d0d"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v2/agilex_msg_parser_v2.h",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v2/agilex_msg_parser_v2.h",
+      "bytes": 836,
+      "sha256": "04553fbf4cc3cf4222dc59eb26a258faf428fb0ab1cd263d9c7ea354920fb896"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v2/agilex_protocol_v2.h",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v2/agilex_protocol_v2.h",
+      "bytes": 10441,
+      "sha256": "346803e920dcb56d78009136dcc5b091c9ee436ffcecb364dc9e85227efa1f36"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/protocol_v2/protocol_v2_parser.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/protocol_v2/protocol_v2_parser.cpp",
+      "bytes": 820,
+      "sha256": "837b216886e90c74f24c0db6fff719a08543985e8018f4cd9367abd8cf920120"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/utilities/protocol_detector.cpp",
+      "path": "third_party/tracer_vendor/sdk/src/utilities/protocol_detector.cpp",
+      "bytes": 1487,
+      "sha256": "743c642b9b1ffde193864221a5dc023dd83ee40505ceb9e59f9ac9a9ee4ec62a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/src/utilities/stopwatch.hpp",
+      "path": "third_party/tracer_vendor/sdk/src/utilities/stopwatch.hpp",
+      "bytes": 4901,
+      "sha256": "8946b7513516d8e188ccc0a8ba694568453862aaa579dc37e985bc045d2dc600"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/cmake/ugv_sdkConfig.cmake.in",
+      "path": "third_party/tracer_vendor/sdk/cmake/ugv_sdkConfig.cmake.in",
+      "bytes": 282,
+      "sha256": "86adebe0618ac35aef05dde31e13ed06e6c6dedb02dbe44a5aa2c6773b913f4b"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/bunker_demo/bunker_robot_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/bunker_demo/bunker_robot_demo.cpp",
+      "bytes": 2525,
+      "sha256": "ccde7fd3efd213b81cc60998d426aa7357e702e44662773a34de36b11cf3620f"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/bunker_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/bunker_demo/CMakeLists.txt",
+      "bytes": 104,
+      "sha256": "0f9d87b931947645bb4fdf21dddd3b3404b53b4c7a168267c4515d2ab9e6b496"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/CMakeLists.txt",
+      "bytes": 186,
+      "sha256": "f6832f97a35d88eb5afdf981b5ee9460cd381f69fe8422744ed42c718f4f1eb6"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/hunter_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/hunter_demo/CMakeLists.txt",
+      "bytes": 104,
+      "sha256": "b17f255f08021a555eea4f94ad3fb9491e0667a4186408be7dcf449e31e5f1c7"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/hunter_demo/hunter_robot_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/hunter_demo/hunter_robot_demo.cpp",
+      "bytes": 3070,
+      "sha256": "347a23fcc8268578f65a3f0df36278bc3246091ef8f68b4a29bc147518b86827"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/ranger_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/ranger_demo/CMakeLists.txt",
+      "bytes": 104,
+      "sha256": "4d6ac047a1a93e7898bcdd3aa239135e7266df117474431a4156209b209a5c2a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/ranger_demo/ranger_robot_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/ranger_demo/ranger_robot_demo.cpp",
+      "bytes": 4095,
+      "sha256": "1d6286e8c0595630d48a496841965815d3b0ad78b34dbfc6bf308866415c9d4d"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/scout_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/scout_demo/CMakeLists.txt",
+      "bytes": 228,
+      "sha256": "1c45eccb3ad874623f2192f9554897823b4ebd748fdc304da25908ba6289e03b"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/scout_demo/scout_mini_omni_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/scout_demo/scout_mini_omni_demo.cpp",
+      "bytes": 4877,
+      "sha256": "75d33941fef7f12a1eecb065fc544c997aa4137e43232c649d0c4494cb50e198"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/scout_demo/scout_robot_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/scout_demo/scout_robot_demo.cpp",
+      "bytes": 5446,
+      "sha256": "8ae74c060cd32978d3b32efa938c37bf684bdd9053993f847c722426b7c14b80"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/tracer_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/tracer_demo/CMakeLists.txt",
+      "bytes": 104,
+      "sha256": "11c0b426d603f205bba526d52d540069bb1bc2e0386c234f88facfda65cce192"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/tracer_demo/tracer_robot_demo.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/tracer_demo/tracer_robot_demo.cpp",
+      "bytes": 2441,
+      "sha256": "2e2693452960325f016b5c858493a53c566b556f4f50a88c28e744a2f7306fba"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/utils_demo/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/sample/utils_demo/CMakeLists.txt",
+      "bytes": 228,
+      "sha256": "8ff7c5a86e2fc1235cbad0f55b6b0568567b09741447172b942990e5a1cad244"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/utils_demo/demo_protocol_detector.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/utils_demo/demo_protocol_detector.cpp",
+      "bytes": 803,
+      "sha256": "1cf45225263012d8bd5003466ca59cfa066e1c0b1dffca3b2ef7ac4adcdbf0e9"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/sample/utils_demo/demo_robot_version.cpp",
+      "path": "third_party/tracer_vendor/sdk/sample/utils_demo/demo_robot_version.cpp",
+      "bytes": 1777,
+      "sha256": "8e3d2e292cfa36587c71f5aa601e5aba6c0cdd67b99c5f56b2cf83cb16c46cd3"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/sdk/CMakeLists.txt",
+      "bytes": 7375,
+      "sha256": "10bbc2762204bbf40b90a0f1eab514a17aabdcb9b8b64151d8c738b9cec97627"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/LICENSE",
+      "path": "third_party/tracer_vendor/sdk/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/README.md",
+      "path": "third_party/tracer_vendor/sdk/README.md",
+      "bytes": 8182,
+      "sha256": "fc4ff7a56538cf56e38c85ad13ef80570c09e03e9c61d920f15d34492713100a"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/sdk/package.xml",
+      "path": "third_party/tracer_vendor/sdk/package.xml",
+      "bytes": 626,
+      "sha256": "7b7dd913ce79c10063f015bb77b493b5bcee74aafdbb12dc480a827e301d3ba9"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/CMakeLists.txt",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/CMakeLists.txt",
+      "bytes": 1029,
+      "sha256": "3d0e81b2dc9e2877a8a206d7b9bf9a6adbe9a63ab7426cb31059faf0ccebac2e"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/msg/TracerActuatorState.msg",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/msg/TracerActuatorState.msg",
+      "bytes": 614,
+      "sha256": "8b23445a6cbf735e527f8ab1db13ebe4064048d241ba628ddcb575aabccb9b89"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/msg/TracerLightCmd.msg",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/msg/TracerLightCmd.msg",
+      "bytes": 203,
+      "sha256": "6ef6e6e8d7b91f5b050220ecb8ba03ef7212b716549179490e0c11199b1fe332"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/msg/TracerLightState.msg",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/msg/TracerLightState.msg",
+      "bytes": 29,
+      "sha256": "f5fc087bf0be8333c6e57baa633152667a60d3167819cef79c7e505a32c68d5f"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/msg/TracerRCState.msg",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/msg/TracerRCState.msg",
+      "bytes": 125,
+      "sha256": "f20789a77f045981274fef30b63e60e2a7d8c6294cc741f407c16c6cef95dded"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/msg/TracerStatus.msg",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/msg/TracerStatus.msg",
+      "bytes": 529,
+      "sha256": "7d67441de03133d55258d7613c229e46d15ed6ada8593c7f79eb64e4909da079"
+    },
+    {
+      "source": "TRACER2.0/TRACER2.0/ros2/tracer_msgs/package.xml",
+      "path": "third_party/tracer_vendor/ros2/tracer_msgs/package.xml",
+      "bytes": 876,
+      "sha256": "4b34ef0ec0ff34f90f1820ad9f094b802facfe6b29488b5132a81939b82dbd66"
+    }
+  ]
+}

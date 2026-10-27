@@ -1,0 +1,17 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.xml text eol=lf
+*.md text eol=lf
+*.rviz text eol=lf
+*.patch -text
+/third_party/tracer_vendor/** -text
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.zip binary
+*.lcm binary
+*.cdr binary
+*.ply binary

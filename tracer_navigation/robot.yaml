@@ -1,0 +1,30 @@
+robot:
+  length_m: 0.702
+  width_m: 0.61
+  height_m: 1.2
+  can_interface: can0
+  can_tx_period_s: 0.05
+  system_feedback_timeout_s: 0.6
+  max_linear_mps: 0.1
+  max_angular_rps: 0.15
+  max_accel_mps2: 0.25
+  max_angular_accel_rps2: 0.5
+mount:
+  x_m: 0.40388423500926623
+  y_m: -0.006332796813257327
+  z_m: 0.30138178794727927
+  roll_deg: 1.8152872639890738
+  pitch_deg: 46.246327632464165
+  yaw_deg: 1.2974485672429674
+  verified: false
+  source: provisional flat-floor fit; physical measurements still required
+navigation:
+  max_route_m: 15.0
+  near_stop_radius_m: 0.7
+  static_map_lcm: reconstruction_20261017_113920/raytrace/global_costmap.lcm
+  lcm_types_dir: auto
+  provisional_obstacle_height_m: 1.5
+  command_timeout_s: 0.25
+  perception_timeout_s: 0.35
+  localization_timeout_s: 0.5
+  feedback_timeout_s: 0.3

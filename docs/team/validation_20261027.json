@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-27",
+  "scope": "offline engineering and team handoff; hardware disconnected by user",
+  "real_sensors_started": false,
+  "physical_driver_started": false,
+  "nonzero_motion_commands_sent": false,
+  "full_vendor_build": {
+    "passed": true,
+    "fresh_runtime": true,
+    "packages": ["tracer_msgs", "tracer_navigation_driver", "tracer_bringup"],
+    "sdk_source": "third_party/tracer_vendor/sdk",
+    "samples_compiled_but_not_executed": true,
+    "nav2_configuration_generated": true
+  },
+  "unit_tests": {
+    "portability": {"passed": true, "tests": 4},
+    "safety": {"passed": true, "tests": 12},
+    "coordinates_and_models": {"passed": true, "tests": 13}
+  },
+  "relocated_checkout_demo": {
+    "passed": true,
+    "fresh_venv": true,
+    "fresh_runtime": true,
+    "original_maps_or_dimos_checkout_copied": false,
+    "vendor_hashes_verified": 74,
+    "domain": 74,
+    "received": ["map", "global_pointcloud", "synthetic_obstacle_pointcloud", "path", "odometry", "tf", "tf_static"],
+    "no_velocity_publishers": true,
+    "no_navigation_actions_or_physical_driver": true,
+    "clean_launch_shutdown": true,
+    "smoke_checks_passed": 9,
+    "full_native_mapping_backend_reproduction": false
+  },
+  "environment_doctor_demo": {"passed": true},
+  "rviz": {
+    "configuration_parsed": true,
+    "fixed_frame": "map",
+    "displays": 7,
+    "interactive_graphical_layout_verified": false,
+    "remaining": "Teammate must confirm actual RViz GUI/display/OpenGL on their machine"
+  },
+  "repository": {
+    "snapshot_note": "Initial offline preparation state before the user supplied the GitHub URL; current publication state is in remote history and docs/team/GITHUB.md",
+    "local_branch": "main",
+    "initial_sources_staged_for_review": true,
+    "author_identity_changed": false,
+    "commit_created": false,
+    "remote_created_or_added": false,
+    "pushed": false,
+    "nested_gitlinks": 0,
+    "git_candidate_audit": "docs/organization/git_candidates_20261027.json (local generated report)"
+  },
+  "github_ci": {"template_prepared": true, "active_workflow_published": false, "cloud_run_verified": false, "reason": "GitHub OAuth token lacks workflow scope; inactive template at docs/team/ci/offline.yml"},
+  "local_evidence_directory": "tracer_navigation/results/team_alignment_20261027",
+  "real_world_open_items": [
+    "USB-CAN intermittent write/feedback faults not closed",
+    "physical distance scale and full A-to-B arrival not accepted",
+    "precise lidar mount calibration not accepted",
+    "new software fingerprint requires new site acceptance"
+  ]
+}
