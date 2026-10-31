@@ -2,6 +2,12 @@
 import math
 
 
+def validate_route_length(length,limit,maximum=15):
+    if not math.isfinite(length) or length<0 or not math.isfinite(limit) or not 0<limit<=maximum:
+        raise ValueError('Invalid route length or limit')
+    if length>limit:raise RuntimeError(f'Route {length:.2f} m exceeds configured bound {limit:.2f} m')
+
+
 def finite_vector(values, size, name):
     if len(values) != size or not all(math.isfinite(float(v)) for v in values):
         raise ValueError(f'{name} requires {size} finite numbers')
