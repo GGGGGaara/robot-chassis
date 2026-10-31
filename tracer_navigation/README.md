@@ -1,5 +1,7 @@
 # 当前导航工程入口
 
+2026-10-31：新增 [整层实时导航开发版](../docs/team/FLOOR_NAVIGATION.md)。`floor_navigate.sh` 只规划为默认；实时地图节点与最终门控以新观测决定通行，参考图不再作为局部安全依据。旧离线闭环不能代替这一配置的现场验收。
+
 团队交接优先阅读 [快速开始](../docs/team/QUICKSTART.md)、[进度](../docs/team/ALIGNMENT.md) 和 [环境接口](../docs/team/ENVIRONMENT.md)。历史版本说明已备份到本机 `docs/history/tracer_navigation_README_20261027.md`。
 
 - `start_ros2.sh`：真实传感器统一预览，默认不接底盘；会尝试连接雷达，设备断开时不用它跑示例。
