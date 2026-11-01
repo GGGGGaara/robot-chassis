@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-31",
+  "stage": "development_pending_field_acceptance",
+  "hardware_started": false,
+  "sensor_backend_started": false,
+  "new_floor_recording_available": false,
+  "regression": {
+    "tests": 49,
+    "passed": true,
+    "modules": [
+      "test_live_navigation",
+      "test_floor_import",
+      "test_safety",
+      "test_coordinates_and_models"
+    ]
+  },
+  "short_mission_limits": {
+    "offline_only": true,
+    "checks": {
+      "configured_route_limit_15m": true,
+      "configured_linear_limit_010": true,
+      "routes_between_5_and_15m_allowed": true,
+      "over_15m_rejected": true,
+      "nan_rejected": true,
+      "negative_rejected": true
+    },
+    "passed": true
+  },
+  "ros_nav2_synthetic": {
+    "offline_only": true,
+    "hardware_started": false,
+    "domain": 43,
+    "checks": {
+      "fresh_full_height_rays_allow_dry_run": true,
+      "actual_nav2_tentative_route": true,
+      "new_obstacle_stops_output": true,
+      "removed_obstacle_clears_only_after_new_rays": true,
+      "ground_without_current_height_coverage_stops": true,
+      "fresh_coverage_recovers_dry_run": true,
+      "input_loss_stops": true,
+      "no_physical_publishers": true,
+      "nav2_closed_loop_arrival_model": true,
+      "nav2_model_stops_after_arrival": true
+    },
+    "model_arrival_error_m": 0.14802044354291258,
+    "model_action_status": 4,
+    "passed": true
+  },
+  "offline_readiness": {
+    "timestamp": 1793442938.5731516,
+    "offline_only": true,
+    "physical_can_present": false,
+    "checks": {
+      "python_shell_xml_syntax": true,
+      "installed_packages": {
+        "nav2_map_server": "/opt/ros/humble",
+        "nav2_controller": "/opt/ros/humble",
+        "nav2_planner": "/opt/ros/humble",
+        "nav2_behaviors": "/opt/ros/humble",
+        "nav2_regulated_pure_pursuit_controller": "/opt/ros/humble",
+        "nav2_collision_monitor": "/opt/ros/humble",
+        "nav2_velocity_smoother": "/opt/ros/humble",
+        "tracer_navigation_driver": "/home/ll175/tracer_nav_runtime/ws/install/tracer_navigation_driver"
+      },
+      "ros_local_udp_route": {
+        "dds": "UDPv4 loopback only",
+        "domains": [
+          42,
+          43
+        ]
+      },
+      "maps_unchanged": {
+        "reference_costmap_sha256": "084292d8a9a6dc0cc8047c6c4ea902b8e533f57bb8c9962e6345e1f25e19399b",
+        "reference_pointcloud_sha256": "5583f9970567a74c69c51181273c0c119f12c4d508cc52c9bbd2d741ab339e05",
+        "assets_verified": true
+      },
+      "conservative_limits_and_fixed_map": true,
+      "compiled_driver_sha256": "4272a60fe1606ee8c3d2f9808328467676dace331be28253fae37374f66e86ca"
+    },
+    "errors": [],
+    "passed": true,
+    "config_sha256": "8ba65630efa7ae13985850688439784cfee8990538836c79396597f6c0f7fba0",
+    "software_sha256": "667a628f4ca3c4a2fc0bff7fd870d4625a5261e68c65ef353a94ad2add804aaf",
+    "hardware_acceptance": "mount_not_accepted"
+  },
+  "limitations": [
+    "Synthetic full-height ideal sensor coverage, including exposed sub-cell body-edge ground; not a MID360 visibility model.",
+    "Earlier model runs stopped on unknown cells with incomplete edge observations; real coverage may also prevent motion.",
+    "No real whole-floor arrival, dynamic obstacle run, physical stopping or CAN stability acceptance.",
+    "Map registration and metre-scale accuracy require the new floor recording and field measurements.",
+    "Historical USB-CAN faults remain unresolved; mount remains unaccepted."
+  ],
+  "local_evidence": "tracer_navigation/results/floor_navigation_20261031/"
+}

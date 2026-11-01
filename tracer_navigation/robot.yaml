@@ -28,3 +28,19 @@ navigation:
   perception_timeout_s: 0.35
   localization_timeout_s: 0.5
   feedback_timeout_s: 0.3
+realtime_navigation:
+  enabled: true
+  resolution_m: 0.1
+  window_m: 12.0
+  evidence_ttl_s: 2.0
+  vertical_band_m: 0.1
+  ground_tolerance_m: 0.025
+  obstacle_min_height_m: 0.03
+  ray_range_m: 8.0
+  max_clearing_rays: 2000
+  reference_obstacle_cost: 90
+  footprint_margin_m: 0.08
+  prediction_s: 2.0
+  minimum_lookahead_m: 0.35
+  max_floor_route_m: 200.0
+  max_floor_duration_s: 3600.0

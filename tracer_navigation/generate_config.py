@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -52,6 +53,20 @@ def main():
               'obstacle_layer':layer(),'inflation_layer':{'plugin':'nav2_costmap_2d::InflationLayer','inflation_radius':.8,'cost_scaling_factor':3.},
               'always_send_full_costmap':True}
         if name=='local_costmap': cost.update(rolling_window=True,width=8,height=8)
+        if c.get('realtime_navigation',{}).get('enabled',False):
+            # StaticLayer is used as a transport for repeatedly updated live grids,
+            # not as the saved-map authority for local collision checking.
+            local=name=='local_costmap'
+            cost['plugins']=['evidence_layer','inflation_layer']
+            cost.pop('static_layer',None);cost.pop('obstacle_layer',None)
+            cost['evidence_layer']={'plugin':'nav2_costmap_2d::StaticLayer',
+                'map_topic':'/navigation/live_map' if local else '/map',
+                'map_subscribe_transient_local':True,'subscribe_to_updates':False,
+                'use_maximum':False,'trinary_costmap':False,'lethal_cost_threshold':100,
+                'unknown_cost_value':255,'transform_tolerance':.2}
+            # Humble StaticLayer reads these from the costmap node, not its plugin namespace.
+            cost.update(use_maximum=False,trinary_costmap=False,lethal_cost_threshold=100,unknown_cost_value=255)
+            if local:cost.update(width=int(math.ceil(c['realtime_navigation']['window_m'])),height=int(math.ceil(c['realtime_navigation']['window_m'])))
         p[name]={name:{'ros__parameters':cost}}
     p['map_server']['ros__parameters']['yaml_filename']=str(output/'static_map.yaml')
     p['planner_server']['ros__parameters'].update(expected_planner_frequency=1.,

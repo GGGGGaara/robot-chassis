@@ -18,7 +18,7 @@ from tracer_msgs.msg import TracerStatus
 from tf2_ros import Buffer,TransformListener
 from common import ROOT,settings,acceptance_error
 from navctl import show_in_rerun
-from coordinate_geometry import relative_goal, finite_vector, distance_metrics, validate_anchor, motion_metrics
+from coordinate_geometry import relative_goal, finite_vector, distance_metrics, validate_anchor, motion_metrics,validate_route_length
 
 
 class Mission(Node):
@@ -106,29 +106,35 @@ def resolve_target(args,start):
     return target,actual,{'kind':'page_selection'}
 
 
-def validate_route_length(length,limit):
-    if not math.isfinite(length) or length<0 or not math.isfinite(limit) or not 0<limit<=15:
-        raise ValueError('Invalid route length or limit')
-    if length>limit:raise RuntimeError(f'Route {length:.2f} m exceeds configured bound {limit:.2f} m')
-
-
 def main():
     p=argparse.ArgumentParser(description='Selected B point in fixed map; default plan only, no arming.')
-    p.add_argument('--execute',action='store_true');p.add_argument('--max-route-m',type=float,
-        default=float(settings()['navigation'].get('max_route_m',3.)))
+    p.add_argument('--execute',action='store_true');p.add_argument('--max-route-m',type=float)
+    p.add_argument('--floor',action='store_true',help='Whole-floor tentative route; mandatory fresh live-clearance profile')
     target_args=p.add_mutually_exclusive_group()
     target_args.add_argument('--relative',nargs=2,type=float,metavar=('FORWARD_M','LEFT_M'),help='Offset from current chassis centre/heading; positive left')
     target_args.add_argument('--xy',nargs=2,type=float,metavar=('X_M','Y_M'),help='Absolute map coordinates in metres')
     target_args.add_argument('--target-file',type=Path,help='Frozen coordinate target with map checksum')
-    p.add_argument('--timeout-s',type=float,default=180.)
+    p.add_argument('--timeout-s',type=float)
     p.add_argument('--save-target',type=Path,help='Save resolved target for a subsequent guarded execution')
+    p.add_argument('--report-file',type=Path,help='Additional unique report for a team action adapter')
+    p.add_argument('--goal-yaw',type=float,help='Required final map heading in radians')
     args=p.parse_args()
-    if not 0<args.max_route_m<=15 or not 5<=args.timeout_s<=600:raise SystemExit('Invalid mission length/time bound')
+    if args.goal_yaw is not None and not math.isfinite(args.goal_yaw):raise SystemExit('Invalid goal yaw')
+    if args.report_file and (not args.report_file.parent.is_dir() or args.report_file.exists()):raise SystemExit('Report parent must exist and report must be new')
+    config=settings();live=config.get('realtime_navigation',{})
+    if args.floor and not live.get('enabled'):raise SystemExit('Floor mission requires realtime navigation profile')
+    bound=float(live.get('max_floor_route_m',200.)) if args.floor else 15.
+    duration=float(live.get('max_floor_duration_s',3600.)) if args.floor else 600.
+    if not 0<bound<=1000 or not 5<=duration<=7200:raise SystemExit('Invalid configured floor bounds')
+    if args.max_route_m is None:args.max_route_m=bound if args.floor else float(config['navigation'].get('max_route_m',3.))
+    if args.timeout_s is None:args.timeout_s=duration if args.floor else 180.
+    if not 0<args.max_route_m<=bound or not 5<=args.timeout_s<=duration:raise SystemExit('Invalid mission length/time bound')
     # Protect the shared navigator/gate from simultaneous task clients.
     mission_lock=(ROOT/'results'/f'.mission_{os.environ.get("ROS_DOMAIN_ID","42")}.lock').open('w')
     try:fcntl.flock(mission_lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     except BlockingIOError:raise SystemExit('Another mission is already running; cancel it first')
-    rclpy.init();node=Mission();handle=None;report={'execute':args.execute,'timestamp':time.time(),'trace':[]};exit_code=1
+    rclpy.init();node=Mission();handle=None;report={'execute':args.execute,'timestamp':time.time(),'trace':[],
+        'floor_mode':args.floor,'reference_route_is_tentative':bool(live.get('enabled')),'reachability':'unconfirmed'};exit_code=1
     folder=ROOT/'results';folder.mkdir(exist_ok=True)
     try:
         node.pause(2.);node.healthy(args.execute)
@@ -149,11 +155,13 @@ def main():
         points=[[v.pose.position.x,v.pose.position.y] for v in response.result.path.poses]
         if len(points)<2:raise RuntimeError('No route returned')
         report.update(distance_metrics(start,target,points));length=report['planned_length_m'];report['path']=points
-        validate_route_length(length,args.max_route_m)
+        validate_route_length(length,args.max_route_m,bound)
         if math.dist(points[0],start[:2])>.35:raise RuntimeError('Path start does not match current robot position')
         # Face the end of the planned route instead of forcing global yaw=0.
         tail=next((v for v in reversed(points[:-1]) if math.dist(v,points[-1])>.10),points[0])
         yaw=math.atan2(target[1]-tail[1],target[0]-tail[0]);pose.pose.orientation.z=math.sin(yaw/2);pose.pose.orientation.w=math.cos(yaw/2)
+        if args.goal_yaw is not None:
+            yaw=args.goal_yaw;pose.pose.orientation.z=math.sin(yaw/2);pose.pose.orientation.w=math.cos(yaw/2)
         report['goal_yaw_rad']=yaw;show_in_rerun(points)
         print(f'Straight A-B: {report["straight_distance_m"]:.2f} m; planned route including detours: {length:.2f} m; B={target}; end heading {math.degrees(yaw):.1f} degrees.',flush=True)
         if report['detour_ratio'] and report['detour_ratio']>1.5:
@@ -194,7 +202,11 @@ def main():
         report['duration_s']=time.monotonic()-begin
         if response.status!=4:raise RuntimeError('Navigation action did not succeed: '+str(response.status))
         report['passed']=report['position_error_m']<=.20
+        if args.goal_yaw is not None:
+            report['yaw_error_rad']=abs(math.atan2(math.sin(report['final'][2]-args.goal_yaw),math.cos(report['final'][2]-args.goal_yaw)))
+            report['passed']=report['passed'] and report['yaw_error_rad']<=.15
         if not report['passed']:raise RuntimeError('Final position outside acceptance tolerance')
+        report['reachability']='arrived_observed'
         print(f'Arrived: position error {report["position_error_m"]:.3f} m. Disarming.',flush=True);exit_code=0
     except (Exception,KeyboardInterrupt) as error:
         report['passed']=False;report['error']=repr(error);print('Mission stopped: '+str(error),flush=True)
@@ -212,6 +224,7 @@ def main():
             report['final_wheel_stop_confirmed']=stopped
             if not stopped or report.get('disarm_error') or report.get('cancel_error'):
                 report['passed']=False;exit_code=1
+                report['reachability']='arrival_or_stop_not_confirmed'
                 print('Physical stop not fully confirmed; check the vehicle and use physical estop if needed.',flush=True)
         if report['trace']:
             report.update(motion_metrics(report['trace']))
@@ -220,6 +233,8 @@ def main():
                 report['remaining_straight_m']=math.dist(last,report['goal'])
                 print(f'Incomplete task: wheel-estimated travel {report["wheel_travelled_m"]:.2f} m; LIO travel {report["lio_travelled_m"]:.2f} m; straight distance still to B {report["remaining_straight_m"]:.2f} m. This is not an arrival.',flush=True)
         (folder/'latest_mission.json').write_text(json.dumps(report,indent=2))
+        if args.report_file:
+            with args.report_file.open('x') as output:json.dump(report,output,indent=2)
         (folder/f'mission_{int(report["timestamp"])}.json').write_text(json.dumps(report,indent=2))
         node.destroy_node()
         if rclpy.ok():rclpy.shutdown()

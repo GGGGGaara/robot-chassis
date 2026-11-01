@@ -5,7 +5,7 @@ import time
 import yaml
 import hashlib
 from pathlib import Path
-from common import ROOT,settings,config_fingerprint,driver_fingerprint,software_fingerprint,acceptance_error
+from common import ROOT,settings,config_fingerprint,driver_fingerprint,software_fingerprint,acceptance_error,localization_map_path
 
 
 def validate_evidence(c,driver_sha,reports,now):
@@ -33,7 +33,8 @@ def main():
         print(json.dumps({'hardware_acceptance':acceptance_error(c) or 'accepted',
             'ground_tests':{d:(ROOT/f'ground_test_{d}.json').exists() for d in ('forward','left')}},indent=2));return
     if args.command=='revoke':
-        c['mount']['verified']=False;(ROOT/'robot.yaml').write_text(yaml.safe_dump(c,sort_keys=False));print('Hardware acceptance revoked.');return
+        raw=yaml.safe_load((ROOT/'robot.yaml').read_text());raw['mount']['verified']=False
+        (ROOT/'robot.yaml').write_text(yaml.safe_dump(raw,sort_keys=False,allow_unicode=True));print('Hardware acceptance revoked.');return
     if not args.map_aligned or not args.motion_observed:raise SystemExit('Operator must confirm map overlap and actual forward/left directions using both flags')
     now=time.time();sha=driver_fingerprint()
     try:
@@ -43,10 +44,12 @@ def main():
     c['mount']['verified']=True
     receipt={'timestamp':now,'config_sha256':config_fingerprint(c),'driver_sha256':sha,'software_sha256':software_fingerprint(),
         'map_sha256':hashlib.sha256(Path(c['navigation']['static_map_lcm']).read_bytes()).hexdigest(),'map_aligned':True,'motion_observed':True,
+        'localization_map_sha256':hashlib.sha256(localization_map_path(c).read_bytes()).hexdigest(),
         'meaning':'Operational site acceptance of estimated extrinsics; not a metrology calibration certificate.',
         'valid_hours':18,'evidence':['ground_test_forward.json','ground_test_left.json']}
     (ROOT/'site_acceptance.json').write_text(json.dumps(receipt,indent=2))
-    (ROOT/'robot.yaml').write_text(yaml.safe_dump(c,sort_keys=False,allow_unicode=True))
+    raw=yaml.safe_load((ROOT/'robot.yaml').read_text());raw['mount']['verified']=True
+    (ROOT/'robot.yaml').write_text(yaml.safe_dump(raw,sort_keys=False,allow_unicode=True))
     print('Site acceptance recorded for 18 hours. Hardware launch still starts DISARMED.')
 
 

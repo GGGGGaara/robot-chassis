@@ -74,7 +74,7 @@ class Probe(Node):
             msg.height=1;msg.width=len(xyz);msg.point_step=12;msg.row_step=12*len(xyz);msg.is_dense=True
             msg.fields=[PointField(name=k,offset=i*4,datatype=PointField.FLOAT32,count=1) for i,k in enumerate(('x','y','z'))]
             msg.data=xyz.tobytes();self.perception.publish(Bool(data=True))
-            mount=self.mount;sensor=(xyz-mount[:3,3])@mount[:3,:3]
+            mount=self.mount;sensor=np.einsum('ij,jk->ik',xyz-mount[:3,3],mount[:3,:3])
             sensor_msg=PointCloud2();sensor_msg.header.stamp=msg.header.stamp;sensor_msg.header.frame_id='mid360_link'
             sensor_msg.height=1;sensor_msg.width=len(sensor);sensor_msg.point_step=12;sensor_msg.row_step=12*len(sensor)
             sensor_msg.is_dense=True;sensor_msg.fields=msg.fields;sensor_msg.data=sensor.astype('<f4').tobytes()

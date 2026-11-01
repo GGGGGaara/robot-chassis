@@ -23,6 +23,11 @@ for option in "$@"; do
 done
 GLOBAL_EMIT=0
 if $MAPPING; then GLOBAL_EMIT=10; fi
+VIEWER_MEMORY_MB="${TRACER_RERUN_MEMORY_MB:-512}"
+if [[ ! "$VIEWER_MEMORY_MB" =~ ^[1-9][0-9]*$ ]] || (( VIEWER_MEMORY_MB < 128 || VIEWER_MEMORY_MB > 1024 )); then
+  echo 'TRACER_RERUN_MEMORY_MB must be 128..1024 MB' >&2; exit 2
+fi
+VIEWER_RATES='{"world/lidar":2.0,"world/local_map":2.0,"world/global_map":0.5,"world/loaded_map":0.5,"world/tf":10.0}'
 
 MAP_PATH="${DIMOS_PREMAP:-$TRACER_PREMAP}"
 LIDAR_ADDRESS="${DIMOS_FASTLIO_LIDAR_IP:-192.168.1.3}"
@@ -32,6 +37,9 @@ HOST_ADDRESS="${DIMOS_FASTLIO_HOST_IP:-192.168.1.111}"
 OPTIONS=(
   --g.transport lcm --g.rerun-open web --g.replay false
   --g.simulation '' --g.record ''
+  # Limit only display history/rates; sensor, localization and model recording are unchanged.
+  --rerunbridgemodule.memory-limit "${VIEWER_MEMORY_MB}MB"
+  --rerunbridgemodule.max-hz "$VIEWER_RATES"
   --lidar-ip "$LIDAR_ADDRESS" --host-ip "$HOST_ADDRESS"
   --fastlio2.frame-id odom --sensor-frame-id mid360_link
   --filter-size-surf 0.08 --filter-size-map 0.1

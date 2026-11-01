@@ -38,6 +38,24 @@ Visualization Manager:
       Color Transformer: AxisColor
       Position Transformer: XYZ
       Axis: Z
+    - Class: rviz_default_plugins/Map
+      Name: Live Clearance Evidence
+      Enabled: false
+      Alpha: 0.6
+      Topic:
+        Value: /navigation/live_map
+        Depth: 1
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+    - Class: rviz_default_plugins/Map
+      Name: Reference Only
+      Enabled: false
+      Alpha: 0.25
+      Topic:
+        Value: /navigation/reference_map
+        Depth: 1
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
     - Class: rviz_default_plugins/PointCloud2
       Name: Current Obstacle Cloud
       Enabled: true
@@ -72,6 +90,7 @@ Visualization Manager:
     - Class: rviz_default_plugins/Interact
     - Class: rviz_default_plugins/MoveCamera
     - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/PublishPoint
   Views:
     Current:
       Class: rviz_default_plugins/Orbit

@@ -34,6 +34,15 @@ def main() -> None:
     g = parsed.global_config_values()
     if g["transport"] != "lcm" or g["replay"] or g["simulation"] or g["record"]:
         raise ValueError("Expected live LCM, no simulation/replay/recording")
+    viewer = parsed.module_kwargs('rerunbridgemodule')
+    limit = viewer['memory_limit']
+    if not limit.endswith('MB') or not limit[:-2].isdigit() or not 128 <= int(limit[:-2]) <= 1024:
+        raise ValueError('Viewer history must have an explicit bounded 128..1024MB limit')
+    rates = viewer['max_hz']
+    for topic, ceiling in {'world/lidar':2., 'world/local_map':2., 'world/global_map':.5,
+                           'world/loaded_map':.5, 'world/tf':10.}.items():
+        if not 0 < rates.get(topic,0) <= ceiling:raise ValueError('Unbounded display rate: '+topic)
+    print(f'OK display history cap: {limit}; display rates: {rates}', flush=True)
 
     for cls, config_cls in ((FastLio2, FastLio2Config), (RayTracingVoxelMap, RayTracingVoxelMapConfig)):
         config = config_cls(**parsed.module_kwargs(cls.name)).model_dump()

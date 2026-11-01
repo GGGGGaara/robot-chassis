@@ -20,5 +20,6 @@ jobs:
           bash tracer_navigation/build_ros2.sh
           source tracer_navigation/ros_env.sh
           python tools/team/test_portability.py
+          python -m unittest discover -s tracer_navigation -p test_live_navigation.py
           python tools/team/smoke_demo.py
           python tools/repo_audit.py

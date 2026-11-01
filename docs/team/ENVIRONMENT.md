@@ -1,5 +1,11 @@
 # 环境、依赖与接口合同
 
+## 2026-10-31 实时楼层配置更新
+
+启用 `robot.yaml/realtime_navigation.enabled` 后：map_server 的保存图改发 `/navigation/reference_map`；`/map` 是实时观测与参考代价融合的候选图；`/navigation/live_map` 是 odom 下的实时通行证据，局部控制不加载历史静态图。原始 `/lidar/points` 的未裁剪射线用于全高度净空，最终门控拒绝过期和未知区域。TF 所有权、原有速度 / CAN 安全链不变。
+
+下方传统接口表中的 `/map` 名称保留，但新配置语义以上述内容为准。新增入口、录图 / 导入、整层任务和实测限制见 [FLOOR_NAVIGATION](FLOOR_NAVIGATION.md)。
+
 ## 三层环境
 
 | 层 | 要求 | 复用策略 |

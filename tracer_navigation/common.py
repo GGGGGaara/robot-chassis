@@ -40,6 +40,11 @@ def config_fingerprint(config):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 
+def localization_map_path(config):
+    default=Path(config['navigation']['static_map_lcm']).with_name('global_map.pc2.lcm')
+    return Path(os.environ.get('DIMOS_PREMAP',os.environ.get('TRACER_PREMAP',str(default)))).expanduser()
+
+
 def driver_fingerprint():
     runtime=Path(os.environ.get('TRACER_RUNTIME_ROOT',str(Path.home()/'tracer_nav_runtime'))).expanduser()
     path=runtime/'ws/install/tracer_navigation_driver/lib/tracer_navigation_driver/tracer_safe_base'
@@ -52,7 +57,8 @@ def software_fingerprint():
            'ros_mapping_backend.py','ros_mapping_bridge.py','ros_model_recorder.py',
            'ws/src/tracer_bringup/launch/system.launch.py','ws/src/tracer_bringup/tracer_bringup/entry.py','start_ros2.sh',
            'ws/src/tracer_navigation_driver/src/tracer_safe_base.cpp','generated/nav2.yaml',
-           'ros_env.sh','project_env.sh','fastdds_loopback.xml','prepare_ros_loopback.sh','ground_test.sh','start_hardware.sh','commission.py']
+           'ros_env.sh','project_env.sh','live_grid.py','live_map_node.py','floor_task.py',
+           'fastdds_loopback.xml','prepare_ros_loopback.sh','ground_test.sh','start_hardware.sh','commission.py']
     digest=hashlib.sha256()
     for name in names:digest.update(name.encode());digest.update((ROOT/name).read_bytes())
     return digest.hexdigest()
@@ -67,6 +73,7 @@ def acceptance_error(config):
         if evidence['driver_sha256']!=driver_fingerprint():return 'driver_changed_after_acceptance'
         if evidence.get('software_sha256')!=software_fingerprint():return 'software_changed_after_acceptance'
         if evidence.get('map_sha256')!=hashlib.sha256(Path(config['navigation']['static_map_lcm']).read_bytes()).hexdigest():return 'map_changed_after_acceptance'
+        if evidence.get('localization_map_sha256')!=hashlib.sha256(localization_map_path(config).read_bytes()).hexdigest():return 'localization_map_changed_after_acceptance'
         age=time.time()-evidence['timestamp']
         if not 0<=age<=18*3600:return 'site_acceptance_expired'
         if not evidence.get('map_aligned') or not evidence.get('motion_observed'):return 'site_checks_missing'
@@ -79,7 +86,7 @@ def pulse_profile(direction):
 
 
 def hardware_fault_requires_rearm(reason,armed,drive,now,grace_deadline):
-    return bool(drive and armed and reason not in ('ok','stopped','near_obstacle') and
+    return bool(drive and armed and reason not in ('ok','stopped','near_obstacle','live_unknown','live_obstacle') and
                 (reason!='command_timeout' or now>grace_deadline))
 
 

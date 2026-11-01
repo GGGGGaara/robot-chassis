@@ -25,6 +25,9 @@ def start(context):
         nodes.append(ExecuteProcess(cmd=[str(ROOT/'.ros_venv/bin/python'),str(ROOT/'live_scan_view.py')],output='screen'))
     nodes.append(ExecuteProcess(cmd=[str(ROOT/'.ros_venv/bin/python'),str(ROOT/'velocity_gate.py'),
                   '--ros-args','-p',f'enable_drive:={str(drive).lower()}'],output='screen'))
+    live=c.get('realtime_navigation',{}).get('enabled',False)
+    if live:
+        nodes.append(ExecuteProcess(cmd=[str(ROOT/'.ros_venv/bin/python'),str(ROOT/'live_map_node.py')],output='screen'))
     if drive:
         nodes.append(Node(package='tracer_navigation_driver',executable='tracer_safe_base',name='tracer_safe_base',
                           parameters=[{'can_interface':c['robot']['can_interface'],'enable_drive':True,
@@ -32,7 +35,7 @@ def start(context):
                             'can_tx_period_s':c['robot']['can_tx_period_s'],
                             'system_feedback_timeout_s':c['robot']['system_feedback_timeout_s']}],output='screen'))
     for package,executable,name,remaps in (
-        ('nav2_map_server','map_server','map_server',[]),
+        ('nav2_map_server','map_server','map_server',[('map','/navigation/reference_map')] if live else []),
         ('nav2_controller','controller_server','controller_server',[('cmd_vel','/cmd_vel_nav')]),
         ('nav2_planner','planner_server','planner_server',[]),
         ('nav2_behaviors','behavior_server','behavior_server',[]),
