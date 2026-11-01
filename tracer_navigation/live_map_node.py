@@ -77,7 +77,9 @@ class LiveMaps(Node):
             out.data=array('b',fused.tobytes());self.fused_pub.publish(out)
         self.status.publish(String(data=json.dumps({'fresh':fresh,'source_stamp':self.source_wall,'reference_is_advisory':True,
             'live_free':int((cells==0).sum()),'live_obstacles':int((cells==100).sum()),'unknown':int((cells<0).sum()),
-            'vertical_bands_required':self.core.bands,'error':error})))
+            'vertical_bands_required':self.core.required_bands,'clearance_mode':self.core.clearance_mode,
+            'required_clearance_height_m':self.core.required_height,'physical_robot_height_m':self.core.height,
+            'upper_clearance_required':self.core.clearance_mode=='full_height','error':error})))
 
 
 def main():

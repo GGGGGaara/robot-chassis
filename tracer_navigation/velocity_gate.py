@@ -148,6 +148,7 @@ class Gate(Node):
             self.status.publish(String(data=json.dumps({'mode':'hardware' if self.drive else 'dry-run','armed':self.core.armed,'reason':reason,'linear':v,'angular':w,'near_stop_points':self.near_points,
                 'inputs_valid':dict(self.valid),'actual_cloud_age_s':now-self.actual_cloud_time if math.isfinite(self.actual_cloud_time) else None,
                 'fault_context':self.fault_context,'live_evidence_required':self.live_enabled,'live_reason':self.live_reason,
+                'clearance_mode':self.core.config.get('realtime_navigation',{}).get('clearance_mode','full_height'),
                 'ages':{k:round(a,2) if math.isfinite(a) else None for k,a in ages.items()}})))
 
 

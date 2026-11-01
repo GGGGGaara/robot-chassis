@@ -11,6 +11,14 @@ class LiveGrid:
         self.n=int(math.ceil(float(self.cfg['window_m'])/self.res));self.bands=int(math.ceil(self.height/self.band))
         if not (.05<=self.res<=.2 and .3<=self.ttl<=5 and 20<=self.n<=300 and 1<=self.bands<=24):
             raise ValueError('Invalid live grid geometry/expiry')
+        self.clearance_mode=self.cfg.get('clearance_mode','full_height')
+        if self.clearance_mode not in ('full_height','ground'):raise ValueError('Unknown clearance mode')
+        self.required_height=self.height
+        if self.clearance_mode=='ground':
+            self.required_height=float(self.cfg.get('ground_clearance_height_m',.3))
+            if not math.isfinite(self.required_height) or not .2<=self.required_height<=min(.5,self.height):
+                raise ValueError('Ground clearance height must be 0.2..0.5m within physical height')
+        self.required_bands=int(math.ceil(self.required_height/self.band-1e-9))
         self.lo=None;self.pose=None;self.last_scan=float('-inf');self.ray_offset=0
         self.ground=np.full((self.n,self.n),-np.inf)
         self.clear=np.full((self.bands,self.n,self.n),-np.inf)
@@ -85,7 +93,9 @@ class LiveGrid:
     def view(self, now):
         result=np.full((self.n,self.n),-1,dtype=np.int8)
         blocked=((now-self.hit<=self.ttl)&(self.hit>=self.clear)).any(axis=0)
-        supported=(now-self.ground<=self.ttl)&((now-self.clear<=self.ttl)&(self.clear>self.hit)).all(axis=0)
+        # Ground mode limits positive clearance proof, never the obstacle-hit height.
+        clear=self.clear[:self.required_bands];hit=self.hit[:self.required_bands]
+        supported=(now-self.ground<=self.ttl)&((now-clear<=self.ttl)&(clear>hit)).all(axis=0)
         result[supported]=0;result[blocked]=100
         return result
 

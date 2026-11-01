@@ -28,6 +28,7 @@ def room_rays(cells, config):
 class LiveEvidence(unittest.TestCase):
     def setUp(self):
         self.config=copy.deepcopy(settings());self.config['realtime_navigation']['max_clearing_rays']=100000
+        self.config['realtime_navigation']['clearance_mode']='full_height'
         self.grid=LiveGrid(self.config);self.origin=[self.config['mount'][k] for k in ('x_m','y_m','z_m')]
 
     def value(self,point,now):
@@ -132,6 +133,47 @@ class LiveEvidence(unittest.TestCase):
         with self.assertRaises(ValueError):validate_route_length(20,30)
         validate_route_length(30,200,200)
         with self.assertRaises(RuntimeError):validate_route_length(201,200,200)
+
+
+class GroundMode(unittest.TestCase):
+    def setUp(self):
+        self.config=copy.deepcopy(settings())
+        self.config['realtime_navigation'].update(clearance_mode='ground',ground_clearance_height_m=.3,max_clearing_rays=100000)
+        self.origin=[self.config['mount'][k] for k in ('x_m','y_m','z_m')]
+        self.rays=np.array([[1.05,.05,0],[1.6,.05,0],[5.,.05,0]])
+
+    def cell(self,grid,now=1.):
+        ids,_=grid.indices(np.array([[1.05,.05]]));x,y=ids[0]
+        return grid.view(now)[y,x]
+
+    def test_ground_mode_allows_low_clearance_without_upper_proof(self):
+        g=LiveGrid(self.config);g.update(self.rays,self.origin,[0,0,0],1.)
+        self.assertEqual(g.required_bands,3);self.assertEqual(g.bands,12)
+        self.assertEqual(self.cell(g),0)
+
+    def test_observed_upper_obstacle_still_blocks(self):
+        g=LiveGrid(self.config);g.update(np.vstack([self.rays,[1.05,.05,.85]]),self.origin,[0,0,0],1.)
+        self.assertEqual(self.cell(g),100)
+
+    def test_ground_return_alone_stays_unknown(self):
+        g=LiveGrid(self.config);g.update(self.rays[:1],self.origin,[0,0,0],1.)
+        self.assertEqual(self.cell(g),-1)
+
+    def test_expired_ground_clearance_never_becomes_free(self):
+        g=LiveGrid(self.config);g.update(self.rays,self.origin,[0,0,0],1.)
+        self.assertEqual(self.cell(g,4.),-1)
+
+    def test_missing_mode_defaults_to_full_height(self):
+        self.config['realtime_navigation'].pop('clearance_mode')
+        g=LiveGrid(self.config);g.update(self.rays,self.origin,[0,0,0],1.)
+        self.assertEqual(g.required_bands,12);self.assertEqual(self.cell(g),-1)
+
+    def test_invalid_ground_height_or_mode_rejected(self):
+        for value in (0.,.51,float('nan')):
+            self.config['realtime_navigation']['ground_clearance_height_m']=value
+            with self.assertRaises(ValueError):LiveGrid(self.config)
+        self.config['realtime_navigation']['clearance_mode']='ignore_everything'
+        with self.assertRaises(ValueError):LiveGrid(self.config)
 
 
 if __name__=='__main__':unittest.main(verbosity=2)
