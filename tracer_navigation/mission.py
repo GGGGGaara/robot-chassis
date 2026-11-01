@@ -116,7 +116,11 @@ def main():
     target_args.add_argument('--target-file',type=Path,help='Frozen coordinate target with map checksum')
     p.add_argument('--timeout-s',type=float)
     p.add_argument('--save-target',type=Path,help='Save resolved target for a subsequent guarded execution')
+    p.add_argument('--report-file',type=Path,help='Additional unique report for a team action adapter')
+    p.add_argument('--goal-yaw',type=float,help='Required final map heading in radians')
     args=p.parse_args()
+    if args.goal_yaw is not None and not math.isfinite(args.goal_yaw):raise SystemExit('Invalid goal yaw')
+    if args.report_file and (not args.report_file.parent.is_dir() or args.report_file.exists()):raise SystemExit('Report parent must exist and report must be new')
     config=settings();live=config.get('realtime_navigation',{})
     if args.floor and not live.get('enabled'):raise SystemExit('Floor mission requires realtime navigation profile')
     bound=float(live.get('max_floor_route_m',200.)) if args.floor else 15.
@@ -156,6 +160,8 @@ def main():
         # Face the end of the planned route instead of forcing global yaw=0.
         tail=next((v for v in reversed(points[:-1]) if math.dist(v,points[-1])>.10),points[0])
         yaw=math.atan2(target[1]-tail[1],target[0]-tail[0]);pose.pose.orientation.z=math.sin(yaw/2);pose.pose.orientation.w=math.cos(yaw/2)
+        if args.goal_yaw is not None:
+            yaw=args.goal_yaw;pose.pose.orientation.z=math.sin(yaw/2);pose.pose.orientation.w=math.cos(yaw/2)
         report['goal_yaw_rad']=yaw;show_in_rerun(points)
         print(f'Straight A-B: {report["straight_distance_m"]:.2f} m; planned route including detours: {length:.2f} m; B={target}; end heading {math.degrees(yaw):.1f} degrees.',flush=True)
         if report['detour_ratio'] and report['detour_ratio']>1.5:
@@ -196,6 +202,9 @@ def main():
         report['duration_s']=time.monotonic()-begin
         if response.status!=4:raise RuntimeError('Navigation action did not succeed: '+str(response.status))
         report['passed']=report['position_error_m']<=.20
+        if args.goal_yaw is not None:
+            report['yaw_error_rad']=abs(math.atan2(math.sin(report['final'][2]-args.goal_yaw),math.cos(report['final'][2]-args.goal_yaw)))
+            report['passed']=report['passed'] and report['yaw_error_rad']<=.15
         if not report['passed']:raise RuntimeError('Final position outside acceptance tolerance')
         report['reachability']='arrived_observed'
         print(f'Arrived: position error {report["position_error_m"]:.3f} m. Disarming.',flush=True);exit_code=0
@@ -224,6 +233,8 @@ def main():
                 report['remaining_straight_m']=math.dist(last,report['goal'])
                 print(f'Incomplete task: wheel-estimated travel {report["wheel_travelled_m"]:.2f} m; LIO travel {report["lio_travelled_m"]:.2f} m; straight distance still to B {report["remaining_straight_m"]:.2f} m. This is not an arrival.',flush=True)
         (folder/'latest_mission.json').write_text(json.dumps(report,indent=2))
+        if args.report_file:
+            with args.report_file.open('x') as output:json.dump(report,output,indent=2)
         (folder/f'mission_{int(report["timestamp"])}.json').write_text(json.dumps(report,indent=2))
         node.destroy_node()
         if rclpy.ok():rclpy.shutdown()
